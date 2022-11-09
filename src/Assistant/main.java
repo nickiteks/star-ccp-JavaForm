@@ -1,16 +1,14 @@
 package Assistant;
 
-import star.common.StarMacro;
-
 import javax.swing.*;
+import javax.tools.JavaFileManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class test extends StarMacro {
+public class main {
+    public static void main(String[] args){
 
-    public void execute() {
-         
         JFrame frame = new JFrame();
         JLabel lbGeometr = new JLabel("Файл геометрии:");
         JButton btnGeometry = new JButton("Выбрать геометрию");
@@ -36,7 +34,6 @@ public class test extends StarMacro {
         frame.setMinimumSize(new Dimension(500,500));
         frame.setVisible(true);
 
+
     }
-
 }
-
