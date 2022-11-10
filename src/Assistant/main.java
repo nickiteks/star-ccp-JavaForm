@@ -19,7 +19,8 @@ public class main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Geometry Choose");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setDialogTitle("Select a geometry");
                 int response = fileChooser.showOpenDialog(null);
 
                 if(response == JFileChooser.APPROVE_OPTION){
@@ -36,7 +37,8 @@ public class main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Excel Choose");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setDialogTitle("Select a Excel");
                 int response = fileChooser.showOpenDialog(null);
 
                 if(response == JFileChooser.APPROVE_OPTION){
@@ -66,8 +68,6 @@ public class main {
             }
         });
 
-
-
         JPanel jpForm = new JPanel();
         jpForm.setLayout(new GridLayout(3,2));
         jpForm.add(lbGeometry);
@@ -77,10 +77,26 @@ public class main {
         jpForm.add(lblSaveDirectory);
         jpForm.add(btnSaveDirectory);
 
+        JButton btnOK = new JButton("Ok");
+        btnOK.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        JPanel jpOK = new JPanel();
+        jpOK.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 2;
+        constraints.gridy = GridBagConstraints.RELATIVE;
+        jpOK.add(btnOK,constraints);
+
         JPanel jpMainPannel = new JPanel();
         jpMainPannel.setLayout(new BorderLayout(10,10));
         jpMainPannel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         jpMainPannel.add(jpForm,BorderLayout.NORTH);
+        jpMainPannel.add(jpOK);
 
         frame.add(jpMainPannel);
 
