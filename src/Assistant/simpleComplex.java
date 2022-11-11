@@ -1,5 +1,6 @@
 package Assistant;
 
+
 import star.amr.AmrModel;
 import star.base.neo.DoubleVector;
 import star.base.neo.NeoObjectVector;
@@ -33,14 +34,18 @@ import star.turbulence.RansTurbulenceModel;
 import star.turbulence.TurbulentModel;
 import star.vis.*;
 
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.SimpleScriptContext;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.Scanner;
+
+
 
 public class simpleComplex extends StarMacro {
 
@@ -948,40 +953,14 @@ public class simpleComplex extends StarMacro {
 
     }
 
-    private void changeGeometry(String geometryPath, String excelPath) throws IOException, InterruptedException {
+    private void changeGeometry(String geometryPath, String excelPath) throws InterruptedException, IOException {
 
-        String Script_Path = "C:\\Users\\NULS\\IdeaProjects\\pythonRunTest\\src\\ggg.py";
-        ProcessBuilder Process_Builder = new
-                ProcessBuilder("python",Script_Path,"1","4")
-                .inheritIO();
-
-        Process Demo_Process = null;
-        try {
-            Demo_Process = Process_Builder.start();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        try {
-            Demo_Process.waitFor();
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        BufferedReader Buffered_Reader = new BufferedReader(
-                new InputStreamReader(
-                        Demo_Process.getInputStream()
-                ));
-        String Output_line = "";
-
-        while (true) {
-            try {
-                if ((Output_line = Buffered_Reader.readLine()) == null) break;
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            System.out.println(Output_line);
-        }
-
+        ProcessBuilder builder = new ProcessBuilder("python",
+                                                              "C:\\Users\\NULS\\IdeaProjects\\star-ccpJavaForm\\src" +
+                                                                      "\\Assistant\\geom.py",
+                                                               geometryPath,
+                                                               excelPath);
+        Process process = builder.start();
     }
 
     private void formChoose(){
@@ -1058,12 +1037,14 @@ public class simpleComplex extends StarMacro {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                //frame.dispose();
+                frame.dispose();
+
                 try {
                     changeGeometry(lbGeometry.getText(),lbExcel.getText());
-                } catch (IOException | InterruptedException ex) {
+                } catch (InterruptedException | IOException ex) {
                     throw new RuntimeException(ex);
                 }
+
 //                importGeometry();
 //                createCylinderParts();
 //                createVolumeMeshControl();
@@ -1099,5 +1080,4 @@ public class simpleComplex extends StarMacro {
         frame.setMinimumSize(new Dimension(500,200));
         frame.setVisible(true);
     }
-
 }
