@@ -84,7 +84,7 @@ public class main {
         btnOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String Script_Path = "C:\\Users\\NULS\\IdeaProjects\\pythonRunTest\\src\\ggg.py";
+                String Script_Path = "C:\\Users\\NULS\\IdeaProjects\\pythonRunTest\\src\\geom.py";
                 ProcessBuilder Process_Builder = new
                         ProcessBuilder("python",Script_Path,"1","4")
                         .inheritIO();
