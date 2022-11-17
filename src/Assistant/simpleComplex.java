@@ -34,10 +34,6 @@ import star.turbulence.RansTurbulenceModel;
 import star.turbulence.TurbulentModel;
 import star.vis.*;
 
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.SimpleScriptContext;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -45,6 +41,9 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Scanner;
 
+
+import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 
 public class simpleComplex extends StarMacro {
@@ -953,13 +952,41 @@ public class simpleComplex extends StarMacro {
 
     }
 
-    private void changeGeometry(String geometryPath, String excelPath) throws InterruptedException, IOException {
+    private int getColumnsGeometryNumber(String pythonFilePath, String columnsNumberFilePath, String exclelPath)
+            throws IOException, InterruptedException {
 
         ProcessBuilder builder = new ProcessBuilder("python",
-                                                              "C:\\Users\\NULS\\IdeaProjects\\star-ccpJavaForm\\src" +
-                                                                      "\\Assistant\\geom.py",
+                pythonFilePath,
+                columnsNumberFilePath,
+                exclelPath);
+        Process process = builder.start();
+
+        TimeUnit.SECONDS.sleep(1);
+
+        File file = new File(columnsNumberFilePath);
+        Scanner scanner = new Scanner(file);
+
+        String fileContent = "";
+
+        while(scanner.hasNext()){
+            fileContent = fileContent.concat(scanner.nextLine());
+        }
+
+        JOptionPane.showMessageDialog(
+                null, "Количесво колонок- "+ fileContent
+        );
+        return Integer.parseInt(fileContent);
+    }
+
+    private void changeGeometry(String geometryPath, String excelPath,int rowNumber) throws InterruptedException, IOException {
+
+        //Runtime.getRuntime().exec("cmd /c start cmd.exe /K python C:\\Users\\NULS\\PycharmProjects\\compasWork\\geom.py");
+
+        ProcessBuilder builder = new ProcessBuilder("python",
+                                                              "C:\\Users\\NULS\\PycharmProjects\\compasWork\\geom.py",
                                                                geometryPath,
-                                                               excelPath);
+                                                               excelPath,
+                                                                Integer.toString(rowNumber));
         Process process = builder.start();
     }
 
@@ -1039,12 +1066,31 @@ public class simpleComplex extends StarMacro {
 
                 frame.dispose();
 
+                int columnNumber = 0;
                 try {
-                    changeGeometry(lbGeometry.getText(),lbExcel.getText());
-                } catch (InterruptedException | IOException ex) {
+                    //метод
+                    columnNumber = getColumnsGeometryNumber(
+                            "C:\\Users\\NULS\\PycharmProjects\\compasWork\\chechRowsNumbver.py",
+                            "C:\\Users\\NULS\\PycharmProjects\\compasWork\\columsNumber.txt",
+                            "C:\\Users\\NULS\\PycharmProjects\\compasWork\\book.xlsx");
+                } catch (IOException | InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
+                for(int i = 1; i <=columnNumber;i++){
+                    try {
+                        //метод
+                        changeGeometry(lbGeometry.getText(),lbExcel.getText(),i);
+                    } catch (InterruptedException | IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    try {
+                        TimeUnit.SECONDS.sleep(3);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
 
+                  // методы работы в Star CCM+
 //                importGeometry();
 //                createCylinderParts();
 //                createVolumeMeshControl();
