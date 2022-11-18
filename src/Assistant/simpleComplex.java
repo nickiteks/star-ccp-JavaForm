@@ -972,22 +972,20 @@ public class simpleComplex extends StarMacro {
             fileContent = fileContent.concat(scanner.nextLine());
         }
 
-        JOptionPane.showMessageDialog(
-                null, "Количесво колонок- "+ fileContent
-        );
         return Integer.parseInt(fileContent);
     }
 
     private void changeGeometry(String geometryPath, String excelPath,int rowNumber) throws InterruptedException, IOException {
 
-        //Runtime.getRuntime().exec("cmd /c start cmd.exe /K python C:\\Users\\NULS\\PycharmProjects\\compasWork\\geom.py");
+        //Runtime.getRuntime().exec("cmd /c start cmd.exe /K python C:\\Users\\NULS\\PycharmProjects\\compasWork\\geom.py"+" "+geometryPath+" " + excelPath+" " + Integer.toString(rowNumber));
 
         ProcessBuilder builder = new ProcessBuilder("python",
-                                                              "C:\\Users\\NULS\\PycharmProjects\\compasWork\\geom.py",
-                                                               geometryPath,
-                                                               excelPath,
-                                                                Integer.toString(rowNumber));
+                "C:\\Users\\NULS\\PycharmProjects\\compasWork\\geom.py",
+                geometryPath,
+                excelPath,
+                Integer.toString(rowNumber));
         Process process = builder.start();
+        process.waitFor();
     }
 
     private void formChoose(){
@@ -1072,25 +1070,20 @@ public class simpleComplex extends StarMacro {
                     columnNumber = getColumnsGeometryNumber(
                             "C:\\Users\\NULS\\PycharmProjects\\compasWork\\chechRowsNumbver.py",
                             "C:\\Users\\NULS\\PycharmProjects\\compasWork\\columsNumber.txt",
-                            "C:\\Users\\NULS\\PycharmProjects\\compasWork\\book.xlsx");
+                            lbExcel.getText());
                 } catch (IOException | InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
-                for(int i = 1; i <=columnNumber;i++){
+                for(int i = 2; i < columnNumber;i++){
                     try {
                         //метод
                         changeGeometry(lbGeometry.getText(),lbExcel.getText(),i);
                     } catch (InterruptedException | IOException ex) {
                         throw new RuntimeException(ex);
                     }
-                    try {
-                        TimeUnit.SECONDS.sleep(3);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
                 }
 
-                  // методы работы в Star CCM+
+                // методы работы в Star CCM+
 //                importGeometry();
 //                createCylinderParts();
 //                createVolumeMeshControl();
@@ -1103,7 +1096,9 @@ public class simpleComplex extends StarMacro {
 //                settingPlaneSection();
 //                createPlot();
 //                setStoppingCriterion(7000);
-
+                JOptionPane.showMessageDialog(
+                        null, "Complete!"
+                );
             }
         });
 
